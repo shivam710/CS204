@@ -1,120 +1,129 @@
-#include <iostream> 
+#include <iostream>
+#include<cstdlib>
 using namespace std;
 
 
-struct Node  
-{  
-    int y; 
-    int x;  
-    Node *next;  
-}; 
+struct Node
+{
+    int y;
+    int x;
+    Node *next;
+};
 struct Node* head = NULL;
 
-void AddFirst(int x , int y) 
-{ 
-    struct Node* new_node = (struct Node*) malloc(sizeof(struct Node)); 
-   
-    new_node->x  = x; 
-    new_node->y  = y; 
-   
-    new_node->next = (head); 
-   
-    (head)    = new_node; 
-} 
+void AddFirst(int x , int y)
+{
+    struct Node* new_node = (struct Node*) malloc(sizeof(struct Node));
 
-int DelFirst() 
-{ 
-    if (head == NULL) 
-        {cout<<"empty linked list";return -1 ;} 
+    new_node->x  = x;
+    new_node->y  = y;
 
-    Node* temp = head; 
-    head = head->next; 
-  
-    delete(temp); 
+    new_node->next = (head);
 
-} 
+    (head)    = new_node;
+}
 
-void Del( int x,int y) 
-{ 
-   
-   if (head == NULL) 
-      {cout<<"empty linked list";return ;} 
-  
-    
-   struct Node* temp = head; 
+void DelFirst()
+{
+    if (head == NULL)
+        {cout<<"-1\n";return ;}
+
+    Node* temp = head;
+    head = head->next;
+
+    delete(temp);
+
+}
+
+void Del( int x,int y)
+{
+
+   if (head == NULL)
+      {cout<<"-1\n";return ;}
+
+
+   struct Node* temp = head;
   struct Node* prev = NULL;
-     
-    if ((head->x)==x&&(head->y)==y) 
-    { 
-        head = temp->next;    
-        free(temp);              
-        return; 
-    } 
-  
-  
-    for (int i=0; temp!=NULL; i++) 
+
+    if ((head->x)==x&&(head->y)==y)
+    {
+        head = temp->next;
+        free(temp);
+        return ;
+    }
+
+
+    for (int i=0; temp!=NULL; i++)
          {
              if(temp->x==x&&temp->y==y)
              {
                  break;
              }
              prev = temp;
-             temp = temp->next; 
+             temp = temp->next;
          }
 
-    if (temp == NULL ) 
-      {cout<<"not found";return ;} 
-  
-    // Node temp->next is the node to be deleted 
-    // Store pointer to the next of node to be deleted 
-    struct Node *next = temp->next; 
-  
-    // Unlink the node from linked list 
-    free(temp);  // Free memory 
-  
-    prev->next = next;  // Unlink the deleted node from list 
-} 
+    if (temp == NULL )
+      {cout<<"-1\n";return ;}
 
-void Search(int d) 
-{ 
-    struct Node* temp = head; 
-    while (temp!= NULL) { 
+    // Node temp->next is the node to be deleted
+    // Store pointer to the next of node to be deleted
+    struct Node *next = temp->next;
+
+    // Unlink the node from linked list
+    free(temp);  // Free memory
+
+    prev->next = next;  // Unlink the deleted node from list
+}
+
+int Search(int d)
+{
+    struct Node* temp = head;
+    int counter=0;
+    while (temp!= NULL)
+    {
         if((temp->x)*(temp->x)+(temp->y)*(temp->y)<=d*d)
         {
-            cout<<"("<<(temp->x)<<","<<(temp->y)<<") ";
+            //cout<<"("<<(temp->x)<<","<<(temp->y)<<") ";
+            counter++;
         }
         temp=temp->next;
-    } 
-} 
+    }
+    if(counter>0) return counter;
+    else return -1;
+}
 
-int Search(int x,int y) 
-{ 
-    struct Node* temp = head; 
-    int counter=0; 
-    while (temp!= NULL) { 
+void Search(int x,int y)
+{
+    struct Node* temp = head;
+    int counter=0;
+    while (temp!= NULL) {
         if((temp->x)==x&&(temp->y)==y)
         {
             counter+=1;
         }
         temp=temp->next;
-    } 
-    return counter;
+    }
+    if(counter==0) cout<<"False";
+    else cout<<"True";
 }
 
-int Length() 
-{ 
-    struct Node* temp = head; 
+int Length()
+{
+    struct Node* temp = head;
     int l=0;
-    while (temp!= NULL) { 
+    while (temp!= NULL) {
         l++;
         temp=temp->next;
-    } 
+    }
     return l;
 }
 int main()
 {
+    int n;
+    cin>>n;
 
-    while(1)
+    while(n--)
     {
         int a;
         cin>>a;
@@ -135,15 +144,16 @@ int main()
         {
             int d;
             cin>>d;
-            Search(d);
+           cout<< Search(d);
             cout<<endl;
-            
+
         }
         else if(a==5)
         {
             int x,y;
             cin>>x>>y;
-            cout<<Search(x,y)<<endl;
+            Search(x,y);
+            cout<<endl;
         }
         else if(a==6)
         {
@@ -151,3 +161,4 @@ int main()
         }
     }
 }
+
