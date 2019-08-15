@@ -85,6 +85,10 @@ bool Balance(string p)
             if (x =='(' || x == '{'||x=='[') 
                 return false; 
             break; 
+	
+	default:
+        return false;		
+			
         } 
     } 
   
