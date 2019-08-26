@@ -3,74 +3,74 @@
 using namespace std;
 
 int prec(string m){
-	//This function sets the precedence order of the operators
-	if(m=="^")return 3;
-	else if(m=="*"||m=="/")return 2;
-	else if(m=="+"||m=="-")return 1;
-	//in all other cases u need to return -1
-	else return -1;
+    //This function sets the precedence order of the opstrtors
+    if(m=="^")return 3;
+    else if(m=="*"||m=="/")return 2;
+    else if(m=="+"||m=="-")return 1;
+    //in all other cases u need to return -1
+    else return -1;
 }
-vector <string> infixtopostfix(vector<string> exp)
+vector <string> infixToPostfix(vector<string> exp)
 {
-    stack<string> opwala;
-    opwala.push("END");
-    vector <string> opera;
+    stack<string> opstack;
+    opstack.push("END");
+    vector <string> opstr;
     for(int i = 0; i < exp.size(); i++)
     {
 
         if(exp[i]!="("&&exp[i]!=")"&&exp[i]!="*"&&exp[i]!="^"&&exp[i]!="-"&&exp[i]!="+"&&exp[i]!="/")
-        opera.push_back(exp[i]);
+        opstr.push_back(exp[i]);
 
 
         else if(exp[i] == "(")
 
-        opwala.push("(");
+        opstack.push("(");
 
 
         else if(exp[i] == ")")
         {
-            while(opwala.top() != "END"&& opwala.top() != "(")
+            while(opstack.top() != "END"&& opstack.top() != "(")
             {
-                string s = opwala.top();
-                opwala.pop();
-               opera.push_back(s);
+                string s = opstack.top();
+                opstack.pop();
+               opstr.push_back(s);
             }
-            if(opwala.top() == "(")
+            if(opstack.top() == "(")
             {
-                string s = opwala.top();
-                opwala.pop();
+                string s = opstack.top();
+                opstack.pop();
             }
         }
 
         else{
-            while(opwala.top() != "END" && prec(exp[i]) <= prec(opwala.top()))
+            while(opstack.top() != "END" && prec(exp[i]) <= prec(opstack.top()))
             {
-            	if(prec(exp[i])==3&&prec(opwala.top())==3)break;
-                string s = opwala.top();
-                opwala.pop();
-                opera.push_back(s);
+                if(prec(exp[i])==3&&prec(opstack.top())==3)break;
+                string s = opstack.top();
+                opstack.pop();
+                opstr.push_back(s);
             }
-            opwala.push(exp[i]);
+            opstack.push(exp[i]);
         }
 
     }
-    while(opwala.top() != "END")
+    while(opstack.top() != "END")
     {
-        string s = opwala.top();
-        opwala.pop();
-        opera.push_back(s);
+        string s = opstack.top();
+        opstack.pop();
+        opstr.push_back(s);
     }
 
-    return opera;
+    return opstr;
 }
-struct 	evalTree
+struct  evalTree
 {
     string value;
     evalTree* left, *right;
 };
 
 
-bool IsaOperator(string s)
+bool Isaopstrtor(string s)
 {
     if (s == "+" || s== "-" ||
             s == "*" || s == "/" ||
@@ -97,7 +97,7 @@ evalTree* constructTree(vector<string> pf)
     for (int i=0; i<pf.size(); i++)
     {
 
-        if (IsaOperator(pf[i])==0)
+        if (Isaopstrtor(pf[i])==0)
         {
             t = newNode(pf[i]);
             st.push(t);
@@ -126,13 +126,13 @@ evalTree* constructTree(vector<string> pf)
 
     return t;
 }
-int toInteger(string s)
+int StrtoInt(string s)
 {
     int num=stoi(s);
 
     return num;
 }
-int evaluation(evalTree* head)
+int eval(evalTree* head)
 {
 
     if (!head)
@@ -140,12 +140,12 @@ int evaluation(evalTree* head)
 
 
     if (!head->left && !head->right)
-        return toInteger(head->value);
+        return StrtoInt(head->value);
 
 
-    int leftval = evaluation(head->left);
+    int leftval = eval(head->left);
 
-    int rightval = evaluation(head->right);
+    int rightval = eval(head->right);
 
 
     if (head->value=="+")
@@ -157,60 +157,77 @@ int evaluation(evalTree* head)
     if (head->value=="*")
         return leftval*rightval;
     if(head->value=="^"){
-    	return pow(leftval,rightval);
+        return pow(leftval,rightval);
     }
 
     return leftval/rightval;
 }
 int main(){
     unsigned long long int n;cin>>n;
-    while(n--){
-	unsigned long long int t;cin>>t;
-	while(t--){
-		int flag=1;
-	string s;
-	cin>>s;
-	vector <string> v;
-	for(int i=0;i<s.length();i++){
-		if(s[i]=='('||s[i]==')'||s[i]=='*'||s[i]=='^'||s[i]=='-'||s[i]=='+'||s[i]=='/'){
-			string res;
-			res+=s[i];
-			v.push_back(res);
-		}
-		else{
-			string res;
-			while(s[i]!='('&&s[i]!=')'&&s[i]!='*'&&s[i]!='^'&&s[i]!='-'&&s[i]!='+'&&s[i]!='/'&&i<s.length()){
-				if(s[i]>='0'&&s[i]<='9'){
-				res+=s[i];
-				i++;
-			}
-			else{
-				flag=0;
-				break;
-			}
-			}
-			i--;
-			v.push_back(res);
-		}
-		if(flag==0)break;
-	}
-	if(flag){
-	//cout<<v.size()<<"||";
-	vector <string> o=infixtopostfix(v);
-	//for(int i=0;i<o.size();i++)cout<<o[i]<<" ";
-	//cout<<endl;
-	evalTree*t = constructTree(o);
+    while(n--)
+    {
+        unsigned long long int t;cin>>t;
+         while(t--)
+         {
+              int flag=1;
+             string s;
+             cin>>s;
+             vector <string> v;
+             char prev=0;
+             for(int i=0;i<s.length();i++)
+             {
+                 if(s[i]=='('||s[i]==')'||s[i]=='*'||s[i]=='^'||s[i]=='-'||s[i]=='+'||s[i]=='/')
+                 {
 
-	//inorder(t);
-	cout<<evaluation(t)<<endl;
-}
-else{
-	cout<<"NOT A VALID INPUT"<<endl;
-}
-}
-}
+                      string res;
+                      res+=s[i];
+                     if(s[i]=='-'&&prev=='(')
+                     {
+                        v.push_back("0");
+                     }
+                    prev=s[i];
 
-	return 0;
+                    v.push_back(res);
+                 }
+                 else
+                 {
 
+                    string res;
+                    while(s[i]!='('&&s[i]!=')'&&s[i]!='*'&&s[i]!='^'&&s[i]!='-'&&s[i]!='+'&&s[i]!='/'&&i<s.length())
+                    {
+                        if(s[i]>='0'&&s[i]<='9')
+                         {
+                              res+=s[i];
+                              i++;
+                         }
+                         else
+                         {
+                            flag=0;
+                             break;
+                         }
+                    }
+                    i--;
+                    v.push_back(res);
+
+                 }
+                if(flag==0)break;
+             }
+            if(flag)
+            {
+
+                 vector <string> o=infixToPostfix(v);
+
+                evalTree*t = constructTree(o);
+
+                cout<<eval(t)<<endl;
+            }
+            else
+            {
+                cout<<"INVALID INPUT"<<endl;
+            }
+        }
+    }
+
+    return 0;
 
 }
