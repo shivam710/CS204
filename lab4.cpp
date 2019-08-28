@@ -1,6 +1,34 @@
 #include<bits/stdc++.h>
+#include<map>
 
 using namespace std;
+
+map<string,int> varmap;
+
+void InsertOrUpdate(map <string,int> &m,string a,int b  )
+{
+   if(m.find(a)==m.end())
+    {
+        m.insert(pair<string,int> (a,b));
+    }
+    else
+    {
+        m.find(a)->second =b;
+    }
+    return;
+}
+
+int Inmap(map <string,int> &m,string a)
+{
+    if(m.find(a)!=m.end()) return 1;
+    else return 0;
+}
+
+int GetValue(map <string,int> &m,string a)
+{
+    return m.find(a)->second;
+}
+
 
 int prec(string m){
     //This function sets the precedence order of the opstrtors
@@ -128,11 +156,26 @@ evalTree* constructTree(vector<string> pf)
 }
 int StrtoInt(string s)
 {
-    int num=stoi(s);
-
-    return num;
+    if(s[0]>='A'&& s[0]<='z')
+    {
+        if(Inmap(varmap,s))
+        {
+            int num =GetValue(varmap,s);
+            return num;
+        }
+        else
+        {
+            cout<<"CANT BE EVALUATED";
+            return 0;
+        }
+    }
+   else
+    {
+         long long int num=stoi(s);
+        return num;
+    }
 }
-int eval(evalTree* head)
+long long int eval(evalTree* head)
 {
 
     if (!head)
@@ -162,14 +205,19 @@ int eval(evalTree* head)
 
     return leftval/rightval;
 }
-int main(){
+int main()
+{
     unsigned long long int n;cin>>n;
     while(n--)
     {
+
+        string temp;
         unsigned long long int t;cin>>t;
          while(t--)
          {
               int flag=1;
+              int tempn;
+              int flagp;
              string s;
              cin>>s;
              vector <string> v;
@@ -189,6 +237,32 @@ int main(){
 
                     v.push_back(res);
                  }
+
+                  else if(s[i]>='A'&& s[i]<='z')
+                    {
+                            string res;
+                            while(s[i]>='A'&& s[i]<='z')
+                            {
+                                res+=s[i];
+                                i++;
+                                 if(s[i]=='=')
+                                {
+                                    temp=res;
+                                    flagp=1;
+                                    res="";
+                                    i++;
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+
+                            }
+                            i--;
+                            v.push_back(res);
+
+
+                         }
                  else
                  {
 
@@ -200,6 +274,7 @@ int main(){
                               res+=s[i];
                               i++;
                          }
+
                          else
                          {
                             flag=0;
@@ -218,14 +293,22 @@ int main(){
                  vector <string> o=infixToPostfix(v);
 
                 evalTree*t = constructTree(o);
-
-                cout<<eval(t)<<endl;
+                if(flagp==1)
+                {
+                    InsertOrUpdate(varmap,temp, eval(t) );
+                }
+                else
+                {
+                    cout<<eval(t)<<endl;
+                }
             }
             else
             {
                 cout<<"INVALID INPUT"<<endl;
             }
+            flagp=0;
         }
+        varmap.clear();
     }
 
     return 0;
